@@ -1,0 +1,93 @@
+# ARTelo Analytics: Regression in R 
+
+# installing the relevant packages for the analysis
+
+install.packages("devtools")  # Helps output models to CSV
+install.packages("gvlma")   # Makes plots
+
+#
+install.packages("nlme")
+install.packages("ggplot2")
+install.packages("broom")
+install.packages("arm")
+
+#read in analytic table
+
+analytic <- read.csv(file="mydata.csv", header=TRUE, sep=",")
+
+#Normal probability plot
+#make linear model using grouping variable
+
+AlcSleepTimeRegression = lm(SLEPTIM2 ~ ALCGRP, data=analytic) 
+
+AlcSleepTimeRegression 
+
+summary(AlcSleepTimeRegression)
+
+#Make diagnostic plots
+
+layout(matrix(c(1,2,3,4),2,2)) # optional 4 graphs/page 
+plot(AlcSleepTimeRegression, 
+	main = "Alcohol by Sleep Duration")
+  
+
+#copy to new dataset
+
+ARTelo_TS <- analytic
+
+#summary statistics
+
+summary(BRFSS_sleep$SLEPTIM2)
+
+#look at histogram
+
+hist(BRFSS_sleep$SLEPTIM2, 
+	main = "Histogram of SLEPTIM2",
+	xlab = "Class SLEPTIM2",
+	ylab = "Frequency",
+	xlim=c(0,15), 
+	ylim=c(0,20000),
+	border = "red",
+	col= "yellow",
+	las = 1,
+	breaks = 24)
+
+
+hist(ARTelo_TS$TS_CLEAN, 
+    main = "Histogram of T/S",
+    xlab = "Class T/S",
+    ylab = "Frequency",
+    xlim=c(0,1.3), 
+    ylim=c(0,10),
+    border = "red",
+    col= "yellow",
+    las = 1,
+    breaks = 24)
+  
+#categorize at median
+
+ARTelo_TS$TSCAT <- "NA"
+ARTelo_TS$TSCAT[ARTelo_TS$TS_CLEAN >0.936] <- 1
+ARTelo_TS$TSCAT[ARTelo_TS$TS_CLEAN <=0.936] <- 0
+
+table(ARTelo_TS$TSCAT, ARTelo_TS$TS_CLEAN)
+
+#log transformation
+
+BRFSS_sleep$LOGSLEEP <- log(BRFSS_sleep$SLEPTIM2)
+ARTelo_TS$LOGTS <- log(ARTelo_TS$TS_CLEAN)
+
+summary(ARTelo_TS$LOGTS)
+
+hist(ARTelo_TS$LOGTS, 
+      main = "Histogram of LOGTS",
+      xlab = "Class LOGTS",
+      ylab = "Frequency",
+      xlim=c(-0.7,0.3), 
+      ylim=c(0,10),
+      border = "red",
+      col= "yellow",
+      las = 2,
+      breaks = 40)
+
+
