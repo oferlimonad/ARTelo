@@ -1,4 +1,51 @@
+#######################################################
 # ARTelo Analytics: Regression in R 
+#######################################################
+# The data used in this analysis comes from our study.
+
+data <- read.csv("171120.csv",header=TRUE) 	# headers were removed
+
+# Reformat the data so that it is
+# 1) Easy to use (add nice columns names)
+# 2) Interpreted correctly by glm ()...
+
+head(data) 	# you see data, but no column names
+
+str(data)	# this shows that we need to tell R which columns contain factors
+# it also shows us that there are some N/A values
+
+# first, add factors to variables "PREGNANCY","TS_LENGTH_GROUP" and "BMI_ADEL" that had number attribute
+
+data$PREGNANCY <-as.factor(data$PREGNANCY)
+data$TS_LENGTH_GROUP <-as.factor(data$TS_LENGTH_GROUP)
+data$BMI_ADEL <-as.factor(data$BMI_ADEL)
+
+str(data)	# this shows that the correct columns are factors
+
+#####################################
+##
+## Now we are ready for some logistic regression. First we'll create a very
+## simple model that uses TS_LENGTH_GROUP to predict PREGNANCY
+##
+#####################################
+ 
+## let's start super simple and see if TS_LENGTH_GROUP (SHRT/LONG) is a good
+## predictor...
+## First, let's just look at the raw data...
+xtabs(~ PREGNANCY + TS_LENGTH_GROUP, data=data)
+#         TS_LENGTH_GROUP	# 1=SHORT	2=LONG
+# PREGNANCY  1  2		# 0= NON PREGNANT	1=PREGNANT
+#         0  8  3
+#         1  5 22
+## Most of the women with short telomeres are not pregnant and most of the women with long telomeres are pregnant.
+## Having short telomeres is likely to decrease the odds in being pregnant.
+##    In other words, if a sample is from the short telomere group, the odds are against it that it
+##    will be pregnant
+## Having long telomers is likely to increase the odds in being pregnant...
+##    In other words, if a sample is from the long telomere group, the odds are for it being pregnant
+
+
+
 
 # installing the relevant packages for the analysis
 
